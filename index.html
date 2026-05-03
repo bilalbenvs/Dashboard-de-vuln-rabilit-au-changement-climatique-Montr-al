@@ -1,0 +1,620 @@
+<!DOCTYPE html> <!-- Indique que le document est en HTML5 -->
+<html lang="fr"> <!-- Langue du document : français -->
+<head>
+  <meta charset="utf-8" /> <!-- Encodage des caractères en UTF-8 -->
+  <title>Dashboard – Vulnérabilité climatique (Montréal)</title> <!-- Titre affiché dans l'onglet du navigateur -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- Permet l'adaptation du site sur mobile -->
+
+  <!-- Police Inter (typographie moderne) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS : framework pour les styles et la grille responsive -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
+        crossorigin="anonymous">
+
+  <!-- Font Awesome : bibliothèque d'icônes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- OpenLayers : bibliothèque cartographique -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@8.2.0/ol.css">
+  <script src="https://cdn.jsdelivr.net/npm/ol@8.2.0/dist/ol.js"></script>
+
+  <!-- Feuille de style personnalisée -->
+  <link rel="stylesheet" href="css/style1.css" />
+</head>
+<body>
+  <!-- En-tête principal -->
+  <header class="main-header">
+    <div class="container-fluid"> <!-- Conteneur fluide Bootstrap -->
+      <div class="d-flex align-items-center" style="position:relative;">
+        <!-- Espaceur gauche (même largeur que les boutons) -->
+        <div style="flex:1;"></div>
+        <!-- Titre centré -->
+        <h1 class="mb-0 text-center" data-i18n="header-title" style="flex:0 1 auto;">Vulnérabilité au changement climatique à Montréal</h1>
+        <!-- Boutons d'action en-tête (poussés à droite) -->
+        <div class="d-flex gap-2" style="flex:1; justify-content:flex-end;">
+          <!-- Bouton information -->
+          <button id="info-btn" class="btn btn-outline-light btn-sm" data-i18n-title="info-btn-title"
+                  title="À propos" data-bs-toggle="modal" data-bs-target="#infoModal">
+            <i class="fas fa-info-circle"></i>
+          </button>
+          <!-- Bouton mode sombre -->
+          <button id="dark-mode-toggle" class="btn btn-outline-light btn-sm" data-i18n-title="dark-btn-title" title="Mode sombre">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+          </button>
+          <!-- Bouton pour changer la langue -->
+          <button id="lang-toggle" class="btn btn-outline-light btn-sm" title="Changer langue">
+            <i class="fas fa-globe me-1"></i><span data-i18n="lang-btn">EN</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenu principal du dashboard -->
+  <main id="app-main" class="dashboard">
+
+    <!-- Barre des indicateurs principaux (KPI) -->
+    <section class="kpi-bar" aria-label="Indicateurs principaux">
+      
+
+      <!-- KPI 1 : Population à faible revenu -->
+      <div class="kpi-card kpi-lico">
+        <i class="fas fa-money-bill-wave kpi-bg-icon text-success" aria-label="Faible revenu"></i>
+        <div id="gauge-pop-lico" class="kpi-bg-gauge"></div>
+        <div class="kpi-text-content">
+          <div class="fw-bold text-primary" data-i18n="kpi-pop-lico-label">Pop à faible revenu</div>
+          <div class="d-flex align-items-baseline gap-2 mt-1">
+            <span class="fs-4" id="kpi-pop-lico-value">--</span>
+            <span class="fs-5 text-muted">/</span>
+            <span class="fs-4" id="kpi-pop-total">--</span>
+          </div>
+          <div class="small text-muted mt-1" id="kpi-pop-lico-pct">-- %</div>
+        </div>
+      </div>
+
+      <!-- KPI 2 : Population sans diplôme -->
+      <div class="kpi-card kpi-degree">
+        <i class="fas fa-graduation-cap kpi-bg-icon text-warning"></i>
+        <div id="gauge-pop-no-degree" class="kpi-bg-gauge"></div>
+        <div class="kpi-text-content">
+          <div class="fw-bold text-warning" data-i18n="kpi-pop-no-degree-label">Pop sans diplôme</div>
+          <div class="d-flex align-items-baseline gap-2 mt-1">
+            <span class="fs-4" id="kpi-pop-no-degree-value">--</span>
+            <span class="fs-5 text-muted">/</span>
+            <span class="fs-4" id="kpi-pop-tot">--</span>
+          </div>
+          <div class="small text-muted mt-1" id="kpi-pop-no-degree-pct">-- %</div>
+        </div>
+      </div>
+
+      <!-- KPI 3 : Ménages locataires -->
+      <div class="kpi-card kpi-renter">
+        <i class="fas fa-home kpi-bg-icon text-info"></i>
+        <div id="gauge-household-renter" class="kpi-bg-gauge"></div>
+        <div class="kpi-text-content">
+          <div class="fw-bold text-info" data-i18n="kpi-household-renter-label">Ménages locataires</div>
+          <div class="d-flex align-items-baseline gap-2 mt-1">
+            <span class="fs-4" id="kpi-household-renter-value">--</span>
+            <span class="fs-5 text-muted">/</span>
+            <span class="fs-4" id="kpi-household-tot">--</span>
+          </div>
+          <div class="small text-muted mt-1" id="kpi-household-renter-pct">-- %</div>
+        </div>
+      </div>
+
+      <!-- KPI 4 : Ménages d'une seule personne -->
+      <div class="kpi-card kpi-alone">
+        <i class="fas fa-user kpi-bg-icon text-danger"></i>
+        <div id="gauge-household-one-person" class="kpi-bg-gauge"></div>
+        <div class="kpi-text-content">
+          <div class="fw-bold text-danger" data-i18n="kpi-household-one-person-label">Ménages d'une seule personne</div>
+          <div class="d-flex align-items-baseline gap-2 mt-1">
+            <span class="fs-4" id="kpi-household-one-person-value">--</span>
+            <span class="fs-5 text-muted">/</span>
+            <span class="fs-4" id="kpi-household-total">--</span>
+          </div>
+          <div class="small text-muted mt-1" id="kpi-household-one-person-pct">-- %</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Colonne gauche avec indicateurs latéraux -->
+    <aside class="indicator-rail" aria-label="Indicateurs latéraux">
+
+      <!-- Bloc statistiques de population -->
+      <div class="pop-stats-section">
+        <h6 class="fw-bold mb-0">
+          <i class="fas fa-chart-pie me-2"></i><span data-i18n="pop-stats-title">Statistiques de population</span>
+        </h6>
+        <div class="row g-2 mt-1">
+          <div class="col-6">
+            <div class="pop-stat-card">
+              <div class="stat-bar-fill stat-bar-65" id="bar-age-65"></div>
+              <div class="stat-card-text">
+                <div class="fw-bold" id="stat-age-65" aria-live="polite">-- %</div>
+                <small data-i18n="stat-age-65-label">âgée 65 ans +</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="pop-stat-card">
+              <div class="stat-bar-fill stat-bar-75" id="bar-age-75"></div>
+              <div class="stat-card-text">
+                <div class="fw-bold" id="stat-age-75" aria-live="polite">-- %</div>
+                <small data-i18n="stat-age-75-label">âgée 75 ans +</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="pop-stat-card">
+              <div class="stat-bar-fill stat-bar-85" id="bar-age-85"></div>
+              <div class="stat-card-text">
+                <div class="fw-bold" id="stat-age-85" aria-live="polite">-- %</div>
+                <small data-i18n="stat-age-85-label">âgée 85 ans +</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="pop-stat-card">
+              <div class="fw-bold text-primary" id="stat-pop-total" aria-live="polite">--</div>
+              <small data-i18n="stat-pop-total-label">totale</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section taille résidentielle -->
+      <div class="residential-section">
+        <h6 class="fw-bold text-primary mb-3">
+          <i class="fas fa-home me-2"></i><span data-i18n="residential-title">Taille Résidentielle</span>
+        </h6>
+        
+        <!-- Champ de recherche code postal -->
+        <div class="search-field mb-3">
+          <label class="form-label fw-medium text-dark mb-1" data-i18n="postal-code-label">Code postal</label>
+          <div class="input-group">
+            <input type="text"
+                   id="postal-code-search"
+                   class="form-control modern-input placeholder-small"
+                   placeholder="Entrez votre code postal &#10;EX : H1L1L7"
+                   data-i18n-placeholder="postal-code-placeholder"
+                   maxlength="6"> <!-- Placeholder sur 2 lignes -->
+            <button class="btn btn-primary" type="button" id="search-postal-btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Code de l'Aire de Division -->
+        <div class="display-field mb-3">
+          <label class="form-label fw-medium text-dark mb-1" data-i18n="division-area-label">Code de l'Aire de Division</label>
+          <div class="form-control modern-display" id="division-area-code">--</div>
+        </div>
+
+        <!-- Code de l'Aire de Division Agrégée -->
+        <div class="display-field mb-3">
+          <label class="form-label fw-medium text-dark mb-1" data-i18n="aggregated-division-label">Code Aaire de Division Agrégée</label>
+          <div class="form-control modern-display" id="aggregated-division-code">--</div>
+        </div>
+
+        <!-- Nombre d'unités avec végétation >30% / Nombre total d'unités -->
+        <div class="display-field mb-4">
+          <label class="form-label fw-medium text-dark mb-1" data-i18n="veg-units-label">Unités avec végétation >30%</label>
+          <!-- <div class="form-control modern-display" id="units-count">--</div> -->
+          <div class="form-control modern-display d-flex align-items-baseline gap-2"> 
+            <span class="form-label font-awesome text-success mb-1" id= "veg-units-count">--</span>
+            <span class="text-muted">/</span> 
+            <span class="form-label fw-medium text-dark mb-1" id= "units-count" >--</span>  
+            <span class="form-label fw-bold text-dark mb-1" data-i18n="veg-units-suffix">unités</span>
+          </div>
+        </div>
+
+        <!-- Pourcentage de végétation % -->
+        <div class="display-field mb-3">
+          <label class="form-label fw-medium text-dark mb-1" data-i18n="veg-pct-label">Pourcentage de végétation %</label>
+          <div class="form-control modern-display" id="veg-pct">-- %</div>
+        </div>
+      </div>
+
+      <!-- Indicateur graphique : Profil socioéconomique -->
+      <div class="indicator-slot tall">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <h6 class="fw-bold text-primary mb-0">
+            <i class="fa-solid fa-chart-column me-2"></i><span data-i18n="soc-eco-title">Profil socioéconomique</span>
+          </h6>
+          
+        </div>
+        <div id="soc-eco-chart" role="img" aria-label="Histogramme du profil socioéconomique" style="height:280px;"></div>
+
+          <!-- Graphique ECharts inséré ici -->
+      </div>
+
+
+
+    </aside>
+
+    <!-- Zone principale avec carte -->
+    <main class="map-area" aria-label="Carte">
+      <section id="map">
+        <!-- Légende de la carte -->
+        <div class="map-legend" id="legend-container">
+          <h2 class="legend-title">
+            <i class="fas fa-list me-2"></i><span data-i18n="legend-title">Légende</span>
+          </h2>
+          <div id="legend-sections">
+            <div id="legend">
+              <h3 class="legend-subtitle">
+                <i class="fas fa-shield-alt me-1"></i><span data-i18n="legend-vuln-title">Vulnérabilité</span>
+              </h3>
+              <!-- Cases à cocher pour niveaux de vulnérabilité -->
+              <label class="legend-item">
+                <input type="checkbox" class="form-check-input lvl" value="low" checked>
+                <span class="swatch swatch-vulnerability-low"></span>
+                <span data-i18n="legend-low">Faible</span>
+              </label>
+              <label class="legend-item">
+                <input type="checkbox" class="form-check-input lvl" value="average" checked>
+                <span class="swatch swatch-vulnerability-average"></span>
+                <span data-i18n="legend-average">Moyen</span>
+              </label>
+              <label class="legend-item">
+                <input type="checkbox" class="form-check-input lvl" value="high" checked>
+                <span class="swatch swatch-vulnerability-high"></span>
+                <span data-i18n="legend-high">Élevé</span>
+              </label>
+              <label class="legend-item">
+                <input type="checkbox" class="form-check-input lvl" value="veryHigh" checked>
+                <span class="swatch swatch-vulnerability-veryHigh"></span>
+                <span data-i18n="legend-very-high">Très élevé</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Popup affichant les attributs des entités -->
+      <div id="popup" class="ol-popup">
+        <a href="#" id="popup-closer" class="ol-popup-closer" aria-label="Fermer popup">×</a>
+        <div id="popup-content"></div>
+      </div>
+
+      <!-- Contrôle des fonds de carte -->
+      <div class="bm-control" id="bm-control">
+        <!-- Bouton déclencheur — cercle avec thumbnail + icône + label (style Google Maps) -->
+        <button id="bm-open" class="bm-btn-card" aria-label="Changer de fond de carte">
+          <div class="bm-active-rect">
+            <img id="bm-active-thumb"
+                 src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/386/301"
+                 alt="Fond alternatif">
+            <div class="bm-active-overlay">
+              <i class="fas fa-layer-group bm-active-icon"></i>
+              <span class="bm-label-default">Fonds</span>
+              <span id="bm-alt-label" class="bm-label-hover"></span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Panneau Google Maps style — vignettes circulaires en rangée -->
+        <div id="bm-panel" class="bm-panel" aria-hidden="true">
+          <div class="bm-header">
+            <span class="bm-header-title" data-i18n="basemap-library-title">Fond de carte</span>
+            <button id="bm-close" class="bm-close-btn" aria-label="Fermer">&#x2715;</button>
+          </div>
+          <div class="bm-grid">
+            <button class="bm-card" data-key="street">
+              <img src="https://tile.openstreetmap.org/10/301/386.png" alt="Street Maps">
+              <span>Street</span>
+            </button>
+            <button class="bm-card" data-key="terrain">
+              <img src="https://mt1.google.com/vt/lyrs=p&x=301&y=386&z=10" alt="Terrain">
+              <span>Terrain</span>
+            </button>
+            <button class="bm-card" data-key="satellite">
+              <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/386/301" alt="Satellite">
+              <span>Satellite</span>
+            </button>
+            <button class="bm-card" data-key="dark">
+              <img src="https://a.basemaps.cartocdn.com/dark_all/10/301/386.png" alt="Dark">
+              <span>Dark</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Panneau droit : simulateur par scénario -->
+    <aside class="right-rail" aria-label="Informations" id="side-panel">
+      <!-- Bouton d'agrandissement du panneau -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold text-primary mb-0">
+          <i class="fas fa-chart-line me-2"></i><span data-i18n="simulator-title">Simulateur de scénarios de vulnérabilité</span>
+        </h6>
+        <button id="expandSimulator" class="btn btn-sm btn-outline-primary" title="Agrandir la vue">
+          <i class="fas fa-expand" id="expandIcon"></i>
+        </button>
+      </div>
+
+      <!-- Contrôles de filtrage compacts pour panneau latéral -->
+      <div class="simulator-controls mb-4">
+        <div class="row g-2 mb-3">
+          <!-- Années -->
+          <div class="col-12">
+            <label class="form-label fw-medium text-dark mb-1" data-i18n="year-label">📅 Année de simulation (2018 → 2095)</label>
+            <div class="dropdown-container">
+              <div class="dropdown-button" id="yearsDropdown">
+                <span class="selected-text">2018</span>
+                <span class="dropdown-arrow">▼</span>
+              </div>
+              <div class="dropdown-content" id="yearsContent">
+                <div class="dropdown-options">
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2018" value="2018" checked>
+                    <label for="year_2018">2018</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2031" value="2031">
+                    <label for="year_2031">2031</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2032" value="2032">
+                    <label for="year_2032">2032</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2033" value="2033">
+                    <label for="year_2033">2033</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2034" value="2034">
+                    <label for="year_2034">2034</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2035" value="2035">
+                    <label for="year_2035">2035</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2051" value="2051">
+                    <label for="year_2051">2051</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2052" value="2052">
+                    <label for="year_2052">2052</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2053" value="2053">
+                    <label for="year_2053">2053</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2054" value="2054">
+                    <label for="year_2054">2054</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2055" value="2055">
+                    <label for="year_2055">2055</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2071" value="2071">
+                    <label for="year_2071">2071</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2072" value="2072">
+                    <label for="year_2072">2072</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2073" value="2073">
+                    <label for="year_2073">2073</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2074" value="2074">
+                    <label for="year_2074">2074</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2075" value="2075">
+                    <label for="year_2075">2075</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2091" value="2091">
+                    <label for="year_2091">2091</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2092" value="2092">
+                    <label for="year_2092">2092</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2093" value="2093">
+                    <label for="year_2093">2093</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2094" value="2094">
+                    <label for="year_2094">2094</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="year_2095" value="2095">
+                    <label for="year_2095">2095</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scénarios SSP -->
+          <div class="col-12">
+            <label class="form-label fw-medium text-dark mb-1" data-i18n="ssp-label">🌡️ Scénario socio-économique partagé (SSP)</label>
+            <div class="dropdown-container">
+              <div class="dropdown-button" id="sspDropdown">
+                <span class="selected-text">Historique</span>
+                <span class="dropdown-arrow">▼</span>
+              </div>
+              <div class="dropdown-content" id="sspContent">
+                <div class="dropdown-options">
+                  <div class="option-item">
+                    <input type="checkbox" id="ssp_historical" value="historical" checked>
+                    <label for="ssp_historical" data-i18n="ssp-historical-label">Historique (2018)</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="ssp_ssp126" value="ssp126" checked>
+                    <label for="ssp_ssp126" data-i18n="ssp-ssp126-label">développement durable</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="ssp_ssp245" value="ssp245">
+                    <label for="ssp_ssp245" data-i18n="ssp-ssp245-label">scénario intermédiaire (modéré)</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="ssp_ssp585" value="ssp585">
+                    <label for="ssp_ssp585" data-i18n="ssp-ssp585-label">croissance intensive</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scénarios de vieillissement -->
+          <div class="col-12">
+            <label class="form-label fw-medium text-dark mb-1" data-i18n="aging-label">👥 Scénario d’évolution démographique</label>
+            <div class="dropdown-container">
+              <div class="dropdown-button" id="agingDropdown">
+                <span class="selected-text">Historique</span>
+                <span class="dropdown-arrow">▼</span>
+              </div>
+              <div class="dropdown-content" id="agingContent">
+                <div class="dropdown-options">
+                  <div class="option-item">
+                    <input type="checkbox" id="aging_historical" value="historical" checked>
+                    <label for="aging_historical" data-i18n="aging-historical-label">Historique (2018)</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="aging_younger" value="scenario_aging_younger" checked>
+                    <label for="aging_younger" data-i18n="aging-younger-label">Population Plus Jeune</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="aging_intermediate" value="scenario_aging_intermediate">
+                    <label for="aging_intermediate" data-i18n="aging-intermediate-label">Population Intermédiaire</label>
+                  </div>
+                  <div class="option-item">
+                    <input type="checkbox" id="aging_older" value="scenario_aging_older">
+                    <label for="aging_older" data-i18n="aging-older-label">Vieillissement accéléré</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bouton d'action -->
+        <div class="d-flex mb-3">
+          <button type="button" id="resetFilters" class="btn btn-outline-secondary btn-sm w-100" data-i18n="reset-btn">
+            🔄 Réinitialiser
+          </button>
+        </div>
+      </div>
+
+      <!-- Graphique Température -->
+      <div class="simulator-chart mb-3">
+        <h6 class="fw-bold text-primary mb-2">
+          <i class="fas fa-thermometer-half me-2"></i><span data-i18n="temp-chart-title">Variations de Température</span>
+        </h6>
+        <div id="chartContainer" class="chart-panel">
+          <div class="loading text-center p-3">
+            <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            Chargement des données...
+          </div>
+        </div>
+      </div>
+
+      <!-- Graphique Mortalité -->
+      <div class="simulator-chart">
+        <h6 class="fw-bold text-danger mb-2">
+          <i class="fas fa-heartbeat me-2"></i><span data-i18n="mortality-chart-title">Taux de Mortalité Prédits</span>
+        </h6>
+        <div id="mortalityChartContainer" class="chart-panel">
+          <div class="loading text-center p-3">
+            <div class="spinner-border spinner-border-sm text-danger me-2" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            Chargement des données de mortalité...
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Bouton flottant pour ouvrir/fermer le panneau droit -->
+  <button id="panel-toggle" class="btn btn-primary panel-toggle" 
+          aria-expanded="true" data-tip="Masquer le panneau">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+
+  <!-- Modal Information -->
+  <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalLabel">
+            <i class="fas fa-info-circle me-2 text-primary"></i>
+            <span data-i18n="info-modal-title">À propos du tableau de bord</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-modal-section">
+            <h6><i class="fas fa-map-marked-alt me-2"></i><span data-i18n="info-section-about-title">Description</span></h6>
+            <p data-i18n="info-section-about-text">Ce tableau de bord interactif visualise la vulnérabilité des quartiers de Montréal face aux changements climatiques. Il combine des données socioéconomiques, démographiques et environnementales pour évaluer les risques par secteur géographique (Aire de Diffusion).</p>
+          </div>
+          <div class="info-modal-section">
+            <h6><i class="fas fa-layer-group me-2"></i><span data-i18n="info-section-data-title">Données</span></h6>
+            <ul class="mb-0 small">
+              <li data-i18n="info-data-1">Données socioéconomiques : Recensement Statistics Canada 2016/2021</li>
+              <li data-i18n="info-data-2">Végétation urbaine : Analyse télédétection 2018</li>
+              <li data-i18n="info-data-3">Projections climatiques : Scénarios SSP (GIEC) 2031–2095</li>
+              <li data-i18n="info-data-4">Mortalité : Modèles prédictifs basés sur données historiques</li>
+            </ul>
+          </div>
+          <div class="info-modal-section">
+            <h6><i class="fas fa-mouse-pointer me-2"></i><span data-i18n="info-section-usage-title">Comment utiliser</span></h6>
+            <ul class="mb-0 small">
+              <li data-i18n="info-usage-1">Cliquez sur un secteur de la carte pour voir ses indicateurs détaillés</li>
+              <li data-i18n="info-usage-2">Entrez un code postal pour localiser une adresse précise</li>
+              <li data-i18n="info-usage-3">Utilisez le simulateur (panneau droit) pour explorer différents scénarios futurs</li>
+              <li data-i18n="info-usage-4">Filtrez les niveaux de vulnérabilité via la légende de la carte</li>
+              <li data-i18n="info-usage-5">Changez le fond de carte selon vos préférences</li>
+            </ul>
+          </div>
+          <div class="info-modal-section">
+            <h6><i class="fas fa-shield-alt me-2"></i><span data-i18n="info-section-vuln-title">Niveaux de vulnérabilité</span></h6>
+            <div class="d-flex flex-wrap gap-3 small">
+              <span><span class="swatch d-inline-block me-1 swatch-vulnerability-low"></span><span data-i18n="legend-low">Faible</span></span>
+              <span><span class="swatch d-inline-block me-1 swatch-vulnerability-average"></span><span data-i18n="legend-average">Moyen</span></span>
+              <span><span class="swatch d-inline-block me-1 swatch-vulnerability-high"></span><span data-i18n="legend-high">Élevé</span></span>
+              <span><span class="swatch d-inline-block me-1 swatch-vulnerability-veryHigh"></span><span data-i18n="legend-very-high">Très élevé</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <small class="text-muted me-auto" data-i18n="info-footer">Tableau de bord de vulnérabilité climatique – Montréal</small>
+          <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal" data-i18n="info-close-btn">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+          integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+          crossorigin="anonymous"></script>
+
+  <!-- ECharts : bibliothèque de graphiques -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+
+  <!-- Script principal de la carte -->
+  <script src="js/map1.js"></script>
+</body>
+</html>

@@ -1,0 +1,3024 @@
+/* ============================
+   Variables CSS pour dimensions relatives et cohérence Bootstrap
+   ============================ */
+:root {
+  /* Dimensions responsives */
+  --header-height: 4.5vh;                    /* En-tête : 4.5% de la hauteur d'écran */
+  --kpi-bar-height: 13vh;                  /* Barre KPI : 13% de la hauteur */
+  --rail-width-desktop: 22vw;              /* Rails latéraux : 22% de la largeur sur desktop */
+  --rail-width-laptop: 25vw;               /* Rails latéraux : 25% sur laptop */
+  --rail-width-tablet: 30vw;               /* Rails latéraux : 30% sur tablette */
+  
+  /* Hauteurs calculées */
+  --dashboard-height: calc(100vh - var(--header-height));
+  --content-height: calc(var(--dashboard-height) - var(--kpi-bar-height));
+  
+  /* Tailles des jauges relatives - MAXIMISÉES pour remplir les cartes KPI */
+  --gauge-size-desktop: min(15vw, 150px);   /* 12% largeur ou 120px max - DOUBLÉ */
+  --gauge-size-laptop: min(14vw, 110px);    /* 14% largeur ou 110px max - DOUBLÉ */
+  --gauge-size-tablet: min(16vw, 100px);    /* 16% largeur ou 100px max - DOUBLÉ */
+  --gauge-size-mobile: min(20vw, 90px);     /* 20% largeur ou 90px max - DOUBLÉ */
+
+  /* Variables Bootstrap */
+  --bs-primary: #0d6efd;                   /* Couleur principale (bleu Bootstrap) */
+  --bs-secondary: #6c757d;                 /* Couleur secondaire (gris Bootstrap) */
+  --bs-success: #198754;                   /* Vert succès */
+  --bs-warning: #ffc107;                   /* Jaune avertissement */
+  --bs-danger: #dc3545;                    /* Rouge erreur */
+  --bs-info: #0dcaf0;                      /* Bleu info */
+  --bs-dark: #212529;                      /* Gris très foncé (texte) */
+  --bs-light: #f8f9fa;                     /* Gris très clair (fonds) */
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0,0,0,0.075); /* Ombre légère */
+  --shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);          /* Ombre moyenne */
+  --border-radius: 0.375rem;               /* Rayon d'arrondi par défaut */
+}
+
+/* ============================
+   Reset et base
+   ============================ */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+/* Poids typographiques Inter */
+h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif; }
+.fw-bold   { font-weight: 600 !important; }
+.fw-medium { font-weight: 500 !important; }
+
+/* Lettrage légèrement resserré sur les titres */
+h1, h2 { letter-spacing: -0.02em; }
+h3, h4, h5, h6 { letter-spacing: -0.01em; }
+
+/* ============================
+   Titres de section unifiés
+   ============================ */
+.indicator-rail h6,
+.right-rail h6,
+.residential-section h6,
+.simulator-chart h6,
+.indicator-slot.tall h6 {
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Icônes des titres : taille et couleur uniformes */
+.indicator-rail h6 i,
+.right-rail h6 i,
+.residential-section h6 i,
+.simulator-chart h6 i,
+.indicator-slot.tall h6 i {
+  font-size: 0.85em;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+/* Ligne séparatrice sous les titres de panneaux principaux */
+.residential-section h6,
+.indicator-slot.tall > div > h6 {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1.5px solid #e5e7eb;
+  width: 100%;
+}
+
+/* Titre de graphique dans .simulator-chart : fond léger intégré */
+.simulator-chart h6 {
+  background: linear-gradient(to right, #f8faff, transparent);
+  border-left: 3px solid #3b82f6;
+  padding-left: 0.6rem;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+/* Titre mortalité : accent rouge */
+.simulator-chart:last-child h6 {
+  background: linear-gradient(to right, #fff5f5, transparent);
+  border-left-color: #ef4444;
+}
+
+/* Mode sombre */
+body.dark-mode .residential-section h6,
+body.dark-mode .indicator-slot.tall > div > h6 {
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .simulator-chart h6 {
+  background: linear-gradient(to right, rgba(59,130,246,0.08), transparent);
+}
+
+body.dark-mode .simulator-chart:last-child h6 {
+  background: linear-gradient(to right, rgba(239,68,68,0.08), transparent);
+}
+
+.modern-display {
+  background: var(--bs-light-bg-subtle, #f8f9fa);
+  border-color: var(--bs-border-color, #dee2e6);
+}
+
+/* ============================
+   Layout principal Dashboard - Dimensions relatives
+   ============================ */
+
+/* Large Desktop (>1400px) - Layout optimal */
+.dashboard {
+  display: grid;
+  grid-template-areas:
+    "indicator-rail kpi-bar  kpi-bar  kpi-bar"
+    "indicator-rail map-area map-area right-rail"
+    "indicator-rail map-area map-area right-rail";
+  grid-template-columns: var(--rail-width-desktop) 1fr 1fr var(--rail-width-desktop);
+  grid-template-rows: var(--kpi-bar-height) 1fr 1fr;
+  height: var(--dashboard-height);
+  gap: 1vw;                               /* Espacement : 1% de la largeur */
+  padding: 1vw;                           /* Marges : 1% de la largeur */
+  transition: grid-template-columns 0.3s ease;
+}
+
+.dashboard.panel-collapsed {
+  grid-template-columns: var(--rail-width-desktop) 1fr 1fr 0;
+}
+
+/* Desktop (1200px - 1400px) */
+@media (max-width: 1400px) {
+  :root {
+    --rail-width-desktop: 24vw;            /* Rails un peu plus larges */
+    --gauge-size-desktop: min(4.5vw, 55px);
+  }
+  
+  .dashboard {
+    gap: 0.8vw;
+    padding: 0.8vw;
+  }
+}
+
+/* Laptop (992px - 1200px) */
+@media (max-width: 1200px) {
+  .dashboard {
+    grid-template-columns: var(--rail-width-laptop) 1fr 1fr var(--rail-width-laptop);
+    gap: 0.7vw;
+    padding: 0.7vw;
+  }
+  
+  .dashboard.panel-collapsed {
+    grid-template-columns: var(--rail-width-laptop) 1fr 1fr 0;
+  }
+
+  .panel-toggle {
+    right: var(--rail-width-laptop);
+  }
+
+  .panel-toggle.panel-collapsed {
+    right: 0;
+  }
+
+  /* Ajustement de la barre KPI */
+  :root {
+    --kpi-bar-height: 15vh;                /* Un peu plus haute sur laptop */
+  }
+}
+
+/* Tablet (768px - 992px) */
+@media (max-width: 992px) {
+  .dashboard {
+    grid-template-areas:
+      "kpi-bar kpi-bar"
+      "indicator-rail indicator-rail"
+      "map-area right-rail";
+    grid-template-columns: 1fr var(--rail-width-tablet);
+    grid-template-rows: var(--kpi-bar-height) 35vh 1fr;
+    gap: 0.6vw;
+    padding: 0.6vw;
+  }
+
+  .dashboard.panel-collapsed {
+    grid-template-columns: 1fr 0;
+  }
+
+  .panel-toggle {
+    right: var(--rail-width-tablet);
+  }
+
+  .panel-toggle.panel-collapsed {
+    right: 0;
+  }
+}
+
+/* Mobile Large (576px - 768px) */
+@media (max-width: 768px) {
+  :root {
+    --kpi-bar-height: 15vh;                /* Plus haute sur mobile */
+  }
+
+  .dashboard {
+    grid-template-areas:
+      "kpi-bar"
+      "indicator-rail"
+      "map-area";
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--kpi-bar-height) 40vh 1fr;
+    gap: 1vh;
+    padding: 1vh;
+  }
+
+  .right-rail {
+    display: none;
+  }
+
+  .panel-toggle {
+    display: none;
+  }
+}
+
+/* Mobile Small (<576px) */
+@media (max-width: 576px) {
+  :root {
+    --kpi-bar-height: 18vh;                /* Encore plus haute */
+  }
+  
+  .dashboard {
+    grid-template-rows: var(--kpi-bar-height) 35vh 1fr;
+    gap: 0.5vh;
+    padding: 0.5vh;
+  }
+}
+
+/* ============================
+   En-tête avec Bootstrap
+   ============================ */
+.main-header {
+  background: #0f172a;
+  color: white;
+  padding: calc(var(--header-height) / 4) 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  /* Bandeau d'accentuation coloré en bas */
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg, #3b82f6, #06b6d4, #10b981) 1;
+}
+
+.main-header h1 {
+  font-size: clamp(0.95rem, 2.2vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #f1f5f9;
+}
+
+.main-header .btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  border-radius: 8px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.main-header .btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: white;
+}
+
+/* Mode sombre : l'en-tête est déjà sombre, ajuster légèrement */
+body.dark-mode .main-header {
+  background: #020617;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================
+   Barre d'indicateurs KPI avec jauges
+   ============================ */
+.kpi-bar {
+  grid-area: kpi-bar;
+  display: flex;
+  gap: 1vw;
+  align-items: stretch;                    /* toutes les cartes à la même hauteur */
+  height: 100%;
+  padding: 0 1vw;
+}
+
+.kpi-card {
+  flex: 1 1 0;                             /* base 0 : répartition strictement égale */
+  min-width: 0;                            /* empêche le texte long de forcer une largeur */
+  border: 1px solid rgba(0,0,0,0.07);
+  border-top: 3px solid transparent;
+  border-radius: 12px;
+  padding: clamp(0.5rem, 1.5vw, 1.25rem);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Teintes de fond par KPI */
+.kpi-lico   { background: #eff6ff; border-top-color: #3b82f6; }
+.kpi-degree { background: #fffbeb; border-top-color: #f59e0b; }
+.kpi-renter { background: #ecfeff; border-top-color: #06b6d4; }
+.kpi-alone  { background: #fff1f2; border-top-color: #f43f5e; }
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* Mode sombre */
+body.dark-mode .kpi-lico   { background: #1e4575; border-color: rgba(96,165,250,0.50);  border-top-color: #60a5fa; }
+body.dark-mode .kpi-degree { background: #453818; border-color: rgba(251,191,36,0.50);  border-top-color: #fbbf24; }
+body.dark-mode .kpi-renter { background: #0d3d52; border-color: rgba(34,211,238,0.50);  border-top-color: #22d3ee; }
+body.dark-mode .kpi-alone  { background: #4a1020; border-color: rgba(251,113,133,0.50); border-top-color: #fb7185; }
+
+.kpi-card .fw-bold {
+  font-size: clamp(1.05rem, 1.55vw, 1.25rem);
+}
+
+/* Icône de fond KPI — coin haut droit, derrière le texte */
+.kpi-bg-icon {
+  position: absolute;
+  top: clamp(0.4rem, 1vw, 0.75rem);
+  right: clamp(0.4rem, 1vw, 0.75rem);
+  z-index: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+/* Jauge de fond KPI — coin bas droit, derrière le texte */
+.kpi-bg-gauge {
+  position: absolute !important;
+  bottom: 4px;
+  right: 4px;
+  top: auto !important;
+  left: auto !important;
+  z-index: 0;
+  width: 68px !important;
+  height: 68px !important;
+  pointer-events: none;
+}
+
+/* Contenu texte KPI — en avant-plan */
+.kpi-text-content {
+  position: relative;
+  z-index: 1;
+}
+
+.kpi-card .fs-4 {
+  font-size: clamp(1rem, 2vw, 1.5rem) !important; /* Valeur adaptative */
+}
+
+.kpi-card .small {
+  font-size: clamp(0.7rem, 1vw, 0.875rem); /* Pourcentage adaptatif */
+}
+
+/* Mobile : KPI en grille 2x2 */
+@media (max-width: 768px) {
+  .kpi-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1vw;
+    padding: 1vw;
+  }
+  
+  .kpi-card {
+    padding: 0.75rem;
+  }
+}
+
+/* Très petit mobile : KPI empilés */
+@media (max-width: 480px) {
+  .kpi-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vh;
+    padding: 1vh;
+  }
+  
+  .kpi-card {
+    flex: none;
+    padding: 0.5rem;
+  }
+}
+
+/* ============================
+   Styles pour les jauges KPI - JAUGES PURES SEULEMENT
+   ============================ */
+
+/* Conteneurs des jauges - SANS DÉCORATION */
+[id^="gauge-"] {
+  width: var(--gauge-size-desktop);
+  height: var(--gauge-size-desktop);
+  flex-shrink: 0;                          /* Ne se réduit pas lors du redimensionnement */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* SUPPRIMÉ : border-radius, background, border */
+}
+
+/* Canvas ECharts pour les jauges */
+[id^="gauge-"] canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Animation de chargement pour les jauges */
+[id^="gauge-"].loading {
+  position: relative;
+  overflow: hidden;
+}
+
+[id^="gauge-"].loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(
+    transparent,
+    rgba(13, 110, 253, 0.3),
+    transparent
+  );
+  animation: gauge-spin 1.5s linear infinite;
+}
+
+@keyframes gauge-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Animation de mise à jour des jauges */
+[id^="gauge-"].updating {
+  animation: gauge-pulse 0.6s ease-in-out;
+}
+
+@keyframes gauge-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* SUPPRIMÉ : Tous les styles spécifiques pour chaque jauge (bordures colorées) */
+
+/* SUPPRIMÉ : États d'alerte pour les jauges (bordures et ombres) */
+
+/* Responsive pour les jauges */
+@media (max-width: 1200px) {
+  [id^="gauge-"] {
+    width: var(--gauge-size-laptop);
+    height: var(--gauge-size-laptop);
+  }
+}
+
+@media (max-width: 992px) {
+  [id^="gauge-"] {
+    width: var(--gauge-size-tablet);
+    height: var(--gauge-size-tablet);
+  }
+}
+
+@media (max-width: 768px) {
+  [id^="gauge-"] {
+    width: var(--gauge-size-mobile);
+    height: var(--gauge-size-mobile);
+  }
+}
+
+@media (max-width: 480px) {
+  [id^="gauge-"] {
+    display: none;
+  }
+}
+
+/* ============================
+   Graphique Socio-économique
+   ============================ */
+
+/* Conteneur principal du graphique */
+#soc-eco-chart {
+  width: 100%;
+  height: clamp(200px, 25vh, 280px);       /* Hauteur adaptative */
+  min-height: 200px;
+  display: block;
+  position: relative;
+}
+
+/* Style du slot indicateur pour le graphique */
+.indicator-slot.tall {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: var(--border-radius);
+  padding: clamp(0.75rem, 1.5vw, 1rem);
+  min-height: clamp(250px, 30vh, 340px);   /* Hauteur adaptative */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.indicator-slot.tall:hover {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+}
+
+/* En-tête du graphique */
+.indicator-slot.tall .d-flex {
+  flex-shrink: 0;
+  margin-bottom: 0.5rem;
+}
+
+/* Canvas ECharts - important pour le rendu */
+#soc-eco-chart canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Animation de chargement pour le graphique */
+.indicator-slot.tall.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.indicator-slot.tall.loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(13, 110, 253, 0.1),
+    transparent
+  );
+  animation: loading-sweep 2s infinite;
+}
+
+@keyframes loading-sweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Style pour l'état vide du graphique */
+.indicator-slot.tall .empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6c757d;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ============================
+   Rail d'indicateurs latéral
+   ============================ */
+.indicator-rail {
+  grid-area: indicator-rail;               /* Zone rail gauche */
+  display: flex; 
+  flex-direction: column;                  /* Empile verticalement les blocs */
+  gap: 0.5rem;                             /* Espacement vertical entre les blocs */
+  background: white;                       /* Panneau distinct sur fond */
+  border-radius: var(--border-radius);     /* Arrondis */
+  padding: 0 clamp(1rem, 2vw, 1.5rem) clamp(1rem, 2vw, 1.5rem); /* Pas de padding en haut */
+  border: 1px solid #dee2e6;               /* Bordure fine */
+  box-shadow: var(--shadow-sm);            /* Ombre légère */
+  width: 100%;                            /* Sature la colonne */
+  overflow-y: auto;
+}
+
+@media (max-width: 992px) {
+  .indicator-rail {
+    max-height: 35vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .indicator-rail {
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .indicator-rail {
+    max-height: 35vh;
+  }
+}
+
+.indicator-slot {
+  background: #f8f9fa;                     /* Fond gris clair (zone vide / placeholder) */
+  border: 2px dashed #ced4da;              /* Style "emplacement" avec bordure en tirets */
+  border-radius: var(--border-radius);     /* Arrondis */
+  padding: 1.5rem;                        /* Respiration interne */
+  text-align: center;                      /* Contenu centré */
+  color: var(--bs-secondary);              /* Texte gris moyen */
+  min-height: 120px;                      /* Hauteur mini pour cohérence visuelle */
+  display: flex; 
+  align-items: center; 
+  justify-content: center;                 /* Centre le contenu */
+  transition: all 0.2s ease;               /* Hover fluide */
+}
+
+.indicator-slot:hover {
+  border-color: var(--bs-primary);         /* Surligne l'emplacement au survol */
+  background: rgba(13,110,253,0.05);       /* Légère coloration bleutée */
+}
+
+.indicator-slot.tall {
+  flex: 2;                                 /* Occupe plus de hauteur (grand panneau) */
+}
+
+/* ============================
+   Section Taille Résidentielle
+   ============================ */
+.residential-section {
+  background: #f8f9fa;                     /* Fond clair pour la section */
+  border: 1px solid #e9ecef;               /* Délimitation douce */
+  border-radius: var(--border-radius);     /* Arrondis */
+  padding: clamp(1rem, 2vw, 1.25rem);      /* Padding adaptatif */
+  margin-bottom: 0;
+  transition: all 0.2s ease;               /* Hover fluide */
+}
+
+.residential-section:hover {
+  border-color: var(--bs-primary);         /* Bordure bleue au survol */
+  background: rgba(13,110,253,0.02);       /* Fond légèrement bleuté */
+}
+
+.residential-section h6 {
+  color: var(--bs-primary);                /* Titre en bleu */
+  font-weight: 600;                        /* Semi-gras */
+  margin-bottom: 1rem;                     /* Distance sous le titre */
+  padding-bottom: 0.5rem;                  /* Espace avant le trait */
+  border-bottom: 2px solid var(--bs-primary); /* Soulignement bleu */
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem); /* Titre adaptatif */
+}
+
+/* Champ de recherche moderne — layout inline label + input */
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-field .form-label {
+  font-size: clamp(0.72rem, 0.95vw, 0.82rem);
+  color: var(--bs-dark);
+  margin-bottom: 0 !important;
+  font-weight: 600;
+  flex: 0 0 auto;
+  max-width: 44%;
+  min-width: 0;
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+/* INPUT de recherche */
+.modern-input {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px 0 0 8px;
+  height: clamp(38px, 5.5vh, 48px);
+  padding: 0 0.75rem;
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  background: #fff;
+  flex: 1;
+  color: #1e293b;
+}
+
+.modern-input::placeholder {
+  white-space: pre-line;
+  font-size: clamp(0.68rem, 0.88vw, 0.78rem);
+  line-height: 1.2rem;
+  position: relative;
+  top: -20%;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.modern-input:hover {
+  border-color: #93c5fd;
+}
+
+.modern-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  outline: none;
+  background: #fff;
+}
+
+/* Groupe input — prend l'espace restant */
+.search-field .input-group {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Bouton loupe */
+.search-field .input-group .btn {
+  border-radius: 0 8px 8px 0;
+  padding: 0.6rem 1rem;
+  border: 1.5px solid #3b82f6;
+  background: #3b82f6;
+  color: white;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  min-width: 42px;
+}
+
+.search-field .input-group .btn:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  transform: none;
+}
+
+/* ============================
+   Champs d'affichage (read-only) - COMPACTS pour garantir visibilité
+   ============================ */
+.display-field {
+  margin-bottom: clamp(0.4rem, 0.8vh, 0.6rem);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.display-field .form-label {
+  font-size: clamp(0.68rem, 0.88vw, 0.78rem);
+  color: var(--bs-dark);
+  margin-bottom: 0 !important;
+  font-weight: 600;
+  line-height: 1.2;
+  flex: 0 0 auto;
+  max-width: 44%;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.display-field .modern-display {
+  flex: 1;
+  min-width: 0;
+}
+
+.modern-display {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  padding: clamp(0.35rem, 0.75vw, 0.55rem) 0.6rem;
+  font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  color: #9ca3af;
+  background: #f9fafb;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  min-height: clamp(30px, 3.8vh, 36px);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.modern-display.has-data {
+  color: #1e293b;
+  background: white;
+  border-color: #34d399;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.1);
+}
+
+.modern-display.updating {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive spécifique pour la section résidentielle */
+@media (max-width: 992px) {
+  .residential-section {
+    padding: clamp(0.6rem, 1.2vw, 0.8rem);     /* Encore plus compact sur tablette */
+    max-height: 30vh;                          /* Limite la hauteur sur tablette */
+  }
+  
+  .residential-section h6 {
+    font-size: clamp(0.9rem, 1.15vw, 1rem);    /* Titre plus petit */
+    margin-bottom: clamp(0.4rem, 0.8vh, 0.6rem);
+  }
+  
+  .display-field {
+    margin-bottom: clamp(0.3rem, 0.6vh, 0.5rem); /* Marges encore plus réduites */
+  }
+}
+
+@media (max-width: 768px) {
+  .residential-section {
+    padding: clamp(0.5rem, 1vw, 0.7rem);       /* Ultra-compact sur mobile */
+    max-height: 35vh;                          /* Plus d'espace sur mobile */
+  }
+  
+  .modern-input, .modern-display {
+    min-height: clamp(30px, 3.5vh, 36px);      /* Hauteurs très réduites */
+    font-size: clamp(0.65rem, 0.85vw, 0.75rem); /* Texte plus petit */
+  }
+  
+  .search-field .form-label, .display-field .form-label {
+    font-size: clamp(0.65rem, 0.8vw, 0.75rem);
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .residential-section {
+    padding: clamp(0.4rem, 0.8vw, 0.6rem);     /* Maximum de compacité */
+    max-height: 32vh;                          /* Optimisé pour petit mobile */
+  }
+  
+  .display-field {
+    margin-bottom: clamp(0.25rem, 0.5vh, 0.4rem); /* Marges minimales */
+  }
+}
+
+/* Assure que les 3 champs essentiels restent visibles */
+.residential-section .display-field:nth-of-type(1),  /* Code AD */
+.residential-section .display-field:nth-of-type(2),  /* Code ADA */
+.residential-section .display-field:nth-of-type(3) { /* Unités végétation */
+  flex-shrink: 0;                              /* Ne se compressent jamais */
+  min-height: clamp(28px, 3vh, 34px);          /* Hauteur minimale garantie */
+}
+
+/* Animation de chargement ("..." pulse) */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }                 /* Début/fin visibles */
+  50% { opacity: 0.5; }                    /* Milieu atténué (effet pulsation) */
+}
+
+.modern-display.loading::after {
+  content: "...";                          /* Ajoute des points animés */
+  animation: pulse 1s infinite;             /* Pulsation sans fin */
+}
+
+/* ============================
+   Zone carte principale
+   ============================ */
+.map-area {
+  grid-area: map-area;                      /* Place cette zone sur la grille "map-area" */
+  position: relative;                       /* Sert d'ancre aux éléments positionnés */
+  background: white;                        /* Fond blanc derrière la carte */
+  border-radius: var(--border-radius);      /* Coins arrondis du conteneur carte */
+  overflow: hidden;                         /* Cache ce qui dépasse */
+  border: 1px solid #dee2e6;                /* Bordure gris clair */
+  box-shadow: var(--shadow);                /* Ombre pour détacher visuellement la carte */
+  min-height: 0;                           /* Permet la compression */
+}
+
+#map {
+  width: 100%;                              /* La carte occupe toute la largeur disponible */
+  height: 100%;                             /* La carte occupe toute la hauteur du conteneur */
+}
+
+/* ============================
+   Panneau droit avec Bootstrap
+   ============================ */
+.right-rail {
+  grid-area: right-rail;                    /* Zone de la grille pour le panneau droit */
+  background: white;                        /* Fond blanc */
+  border-radius: var(--border-radius);      /* Coins arrondis */
+  border: 1px solid #dee2e6;                /* Bordure gris clair */
+  box-shadow: var(--shadow-sm);             /* Légère ombre */
+  transition: all 0.3s ease;                /* Animation lors de l'ouverture/fermeture */
+  overflow: hidden;                         /* Cache les débordements internes */
+}
+
+.dashboard.panel-collapsed .right-rail {
+  width: 0;                                 /* Panneau réduit à 0 quand masqué */
+  opacity: 0;                               /* Devient transparent */
+  transform: translateX(100%);              /* Glisse vers la droite (hors écran) */
+}
+
+.right-rail-inner {
+  padding: clamp(1rem, 2vw, 1.5rem);       /* Padding adaptatif */
+  height: 100%;                            /* S'étire sur la hauteur disponible */
+  overflow-y: auto;                         /* Scroll vertical si le contenu dépasse */
+}
+
+.right-rail h2 {
+  color: var(--bs-primary);                 /* Titre en bleu primaire */
+  font-size: clamp(1rem, 1.5vw, 1.25rem);  /* Taille adaptative */
+  font-weight: 600;                         /* Semi-gras */
+}
+
+/* ============================
+   Bouton toggle panneau
+   ============================ */
+.panel-toggle {
+  position: fixed;                          /* Position fixe par rapport à la fenêtre */
+  right: var(--rail-width-desktop);         /* Collé au bord gauche du panneau droit */
+  top: 50%;                                 /* Centré verticalement */
+  transform: translateY(-50%);              /* Ajuste le centrage vertical exact */
+  z-index: 1050;                            /* Au-dessus des autres éléments */
+  border-radius: 0 var(--border-radius) var(--border-radius) 0; /* Coins arrondis côté droit */
+  padding: 1rem 0.75rem;                    /* Zone cliquable confortable */
+  font-size: 1rem;                          /* Taille d'icône/texte */
+  box-shadow: var(--shadow);                /* Ombre pour lisibilité sur la carte */
+  transition: right 0.3s ease, background 0.2s ease, box-shadow 0.2s ease; /* right synchro avec le panneau */
+}
+
+.panel-toggle i {
+  display: inline-block;
+  transition: transform 0.3s ease;          /* Rotation synchro avec le panneau */
+}
+
+.panel-toggle:hover {
+  transform: translateY(-50%) translateX(2px); /* Léger décalage vers la droite au hover */
+}
+
+.panel-toggle.panel-collapsed {
+  right: 0;                                 /* Panneau fermé : bouton au bord droit de l'écran */
+}
+
+.panel-toggle.panel-collapsed i {
+  transform: rotate(180deg);                /* Inverse le chevron (→ devient ←) */
+}
+
+/* ============================
+   Légende carte avec Bootstrap
+   ============================ */
+.map-legend {
+  position: absolute;
+  bottom: 64px;
+  left: 15px;                               /* Déplacé à gauche */
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px;
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.10),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  width: fit-content;                       /* S'adapte au contenu — le JS scale l'ensemble */
+  min-width: 160px;
+  z-index: 10;
+  transform-origin: bottom left;           /* Scale depuis le coin inférieur gauche */
+  transition: box-shadow 0.2s ease, transform 0.25s ease;
+}
+
+.map-legend:hover {
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.07),
+    0 16px 32px rgba(0, 0, 0, 0.13),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+}
+
+.legend-title {
+  font-size: 0.93rem;                       /* Scale géré par JS — valeur fixe de référence */
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-subtitle {
+  font-size: 0.78rem;                       /* Scale géré par JS — valeur fixe de référence */
+  font-weight: 600;
+  color: #3b82f6;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #e5e7eb;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.80rem;                       /* Scale géré par JS — valeur fixe de référence */
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  padding: 0.3rem 0.4rem;
+  border-radius: 8px;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.legend-item:hover {
+  background-color: rgba(59, 130, 246, 0.08);
+  transform: translateX(2px);
+}
+
+.legend-item .form-check-input {
+  margin: 0;
+  position: static;
+  cursor: pointer;
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+/* Mode sombre */
+body.dark-mode .map-legend {
+  background: rgba(15, 23, 42, 0.96);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.3),
+    0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .map-legend:hover {
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.4),
+    0 16px 32px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .legend-title   { color: #f1f5f9; }
+body.dark-mode .legend-subtitle { color: #60a5fa; border-bottom-color: #334155; }
+body.dark-mode .legend-item     { color: #cbd5e1; }
+body.dark-mode .legend-item:hover { background-color: rgba(96, 165, 250, 0.1); }
+
+.swatch-circle {
+  border-radius: 50%;                       /* Variante ronde pour certains styles */
+}
+
+/* Couleurs de vulnérabilité — rampe accessible vert → ambre → orange → rouge */
+.swatch-vulnerability-low      { background-color: #22c55e; }   /* Faible     = vert-500  */
+.swatch-vulnerability-average  { background-color: #eab308; }   /* Moyen      = ambre-500 */
+.swatch-vulnerability-high     { background-color: #f97316; }   /* Élevé      = orange-500 */
+.swatch-vulnerability-veryHigh { background-color: #dc2626; }   /* Très élevé = rouge-600 */
+
+/* Couleurs de végétation */
+.swatch-vegetation-0-15 { background-color: #8B4513; }          /* 0–15% = brun */
+.swatch-vegetation-15-30 { background-color: #FFA500; }         /* 15–30% = orange */
+.swatch-vegetation-30-50 { background-color: #FFFF00; }         /* 30–50% = jaune */
+.swatch-vegetation-50-75 { background-color: #90EE90; }         /* 50–75% = vert clair */
+.swatch-vegetation-75-100 { background-color: #006400; }        /* 75–100% = vert foncé */
+
+/* ============================
+   Contrôles de fonds de carte
+   ============================ */
+.bm-control {
+  position: absolute;
+  left: 15px;
+  bottom: 12px;                             /* Au ras du bas, même ligne que la barre d'échelle */
+  z-index: 10;
+  transform-origin: bottom left;
+  transition: transform 0.25s ease;
+}
+
+/* ── Barre d'échelle moderne (verre sombre) ── */
+.ol-scale-line {
+  background: rgba(15,23,42,0.82) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 10px !important;
+  padding: 5px 12px 7px !important;
+  left: 130px !important;
+  bottom: 12px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.35) !important;
+  transform-origin: bottom left;
+  transition: transform 0.25s ease;
+}
+.ol-scale-line-inner {
+  border: 2px solid rgba(255,255,255,0.85) !important;
+  border-top: none !important;
+  color: #fff !important;
+  font-size: 0.68rem !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.03em !important;
+  text-align: center !important;
+  margin-top: 4px !important;
+}
+
+/* ── Attribution © — texte discret, fond transparent ── */
+.ol-attribution {
+  bottom: 12px !important;
+  right:  15px !important;
+  left:   auto !important;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease;
+}
+.ol-attribution button {
+  display: none !important;
+}
+.ol-attribution ul {
+  background:        rgba(255,255,255,0.78) !important;
+  backdrop-filter:   blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border:            none !important;
+  box-shadow:        0 1px 4px rgba(0,0,0,0.14) !important;
+  border-radius:     6px !important;
+  margin:            0 !important;
+  padding:           2px 7px !important;
+  height:            auto !important;
+  color:             rgba(30,30,30,0.90) !important;
+  font-size:         0.60rem !important;
+  font-family:       'Inter', sans-serif !important;
+  line-height:       1.5 !important;
+  list-style:        none !important;
+  white-space:       nowrap !important;
+  overflow:          hidden !important;
+  text-overflow:     ellipsis !important;
+  max-width:         300px !important;
+}
+.ol-attribution ul li { display: inline; }
+.ol-attribution a,
+.ol-attribution a:visited {
+  color:      rgba(30,30,30,0.80) !important;
+  background: transparent !important;
+  border:     none !important;
+  text-decoration: none !important;
+}
+.ol-attribution a:hover {
+  color:           rgba(0,0,0,1) !important;
+  text-decoration: underline !important;
+}
+
+/* Mode sombre */
+body.dark-mode .ol-attribution ul {
+  background:        rgba(30,30,30,0.75) !important;
+  color:             rgba(210,215,220,0.90) !important;
+}
+body.dark-mode .ol-attribution a,
+body.dark-mode .ol-attribution a:visited {
+  color: rgba(190,200,210,0.85) !important;
+}
+
+/* Mode sombre barre d'échelle */
+body.dark-mode .ol-scale-line {
+  background: rgba(2,6,23,0.90) !important;
+  border-color: rgba(255,255,255,0.16) !important;
+}
+
+/* ── Bouton déclencheur — rectangle arrondi avec fond alternatif (Google Maps style) ── */
+.bm-btn-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: block;
+}
+
+/* Rectangle arrondi principal */
+.bm-active-rect {
+  position: relative;
+  width: 72px;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2.5px solid rgba(255,255,255,0.92);
+  box-shadow:
+    0 2px 10px rgba(0,0,0,0.32),
+    0 0 0 1px rgba(0,0,0,0.10);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.bm-btn-card:hover .bm-active-rect {
+  transform: translateY(-2px);
+  box-shadow:
+    0 5px 16px rgba(0,0,0,0.40),
+    0 0 0 1px rgba(0,0,0,0.12);
+}
+
+/* Thumbnail — remplit le rectangle */
+.bm-active-rect img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay dégradé + icône + texte */
+.bm-active-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: linear-gradient(
+    170deg,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.52) 100%
+  );
+}
+
+.bm-active-icon {
+  font-size: 1.0rem;
+  color: #fff;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.55));
+}
+
+/* Label par défaut "Fonds" — visible au repos */
+.bm-label-default {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.65);
+  line-height: 1;
+  display: block;
+}
+
+/* Label hover — nom du fond alternatif, caché par défaut */
+.bm-label-hover {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.65);
+  line-height: 1;
+  display: none;
+}
+
+/* Sur hover : cacher "Fonds", montrer le nom du fond alternatif */
+.bm-btn-card:hover .bm-label-default { display: none; }
+.bm-btn-card:hover .bm-label-hover   { display: block; }
+
+/* ── Panel Google Maps style ── */
+.bm-panel {
+  position: absolute;
+  bottom: calc(100% + 8px);                /* 8px au-dessus du bouton */
+  left: 0;
+  width: max-content;
+  background: #ffffff;
+  border-radius: 14px;
+  border: none;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.12),
+    0 8px 24px rgba(0,0,0,0.14);
+  transform: translateY(8px) scale(0.96);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+  overflow: hidden;
+}
+.bm-panel.show {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* En-tête minimal */
+.bm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px 6px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.bm-header-title {
+  font-size: 0.70rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.bm-close-btn {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: #999;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.bm-close-btn:hover { color: #333; background: #f0f0f0; }
+
+/* Rangée de vignettes circulaires */
+.bm-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  padding: 10px 12px 14px;
+}
+
+/* Carte individuelle */
+.bm-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 68px;
+  padding: 6px 4px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.bm-card:hover { background: #f5f5f5; }
+
+/* Vignette circulaire */
+.bm-card img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid transparent;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.bm-card:hover img {
+  border-color: rgba(26,115,232,0.35);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+}
+.bm-card.selected img {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 1px #1a73e8, 0 2px 8px rgba(26,115,232,0.30);
+}
+
+/* Label sous la vignette */
+.bm-card span {
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: #555;
+  text-align: center;
+  line-height: 1.2;
+}
+.bm-card.selected span { color: #1a73e8; font-weight: 600; }
+
+/* ============================
+   Popup OpenLayers
+   ============================ */
+.ol-popup {
+  position: absolute;                       /* Positionné par rapport à la carte */
+  background: rgba(255,255,255,0.98);       /* Fond quasi-opaque */
+  backdrop-filter: blur(10px);              /* Effet verre dépoli */
+  border-radius: var(--border-radius);      /* Coins arrondis */
+  border: 1px solid rgba(0,0,0,0.1);        /* Liseré subtil */
+  padding: 0.75rem;                         /* Fixe — le scale gère l'adaptation */
+  bottom: 12px;                             /* Position au-dessus du point */
+  left: -50px;                              /* Léger décalage horizontal */
+  width: fit-content;                       /* S'ajuste au contenu — scalée par JS */
+  min-width: 280px;
+  box-shadow: var(--shadow);                /* Ombre portée */
+  opacity: 0;                               /* État caché par défaut */
+  transform-origin: bottom center;          /* Ancre sur la pointe de la flèche */
+  transform: translateY(10px) scale(var(--popup-scale, 1));
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;                            /* Au-dessus de la plupart des éléments */
+}
+
+.ol-popup.show {
+  opacity: 1;
+  transform: translateY(0) scale(var(--popup-scale, 1));
+}
+
+.ol-popup:after {
+  top: 100%;                                /* Pointe en bas de la popup */
+  border: solid transparent;                /* Base de la flèche triangulaire */
+  content: " ";                             /* Nécessaire pour générer l'élément */
+  height: 0; width: 0;                      /* Triangle via bordures */
+  position: absolute;                       /* Positionné par rapport à la popup */
+  pointer-events: none;                     /* Non cliquable */
+  border-top-color: rgba(255,255,255,0.98); /* Couleur de la pointe */
+  border-width: 10px;                       /* Taille de la pointe */
+  left: 48px;                               /* Position horizontale de la pointe */
+  margin-left: -10px;                       /* Centre la pointe par rapport à son ancre */
+}
+
+.ol-popup-closer {
+  text-decoration: none;                    /* Pas de soulignement */
+  position: absolute;                       /* Placé dans le coin */
+  top: 8px; right: 12px;                    /* Décalage par rapport aux bords */
+  color: var(--bs-secondary);               /* Couleur grise */
+  font-size: 1.5rem;                        /* Taille du "×" */
+  font-weight: bold;                        /* Graisse du "×" */
+  line-height: 1;                           /* Pas d'espace vertical superflu */
+  transition: color 0.2s ease;              /* Animation de couleur au hover */
+}
+
+.ol-popup-closer:hover {
+  color: var(--bs-danger);                  /* Passe en rouge au survol */
+}
+
+.ol-popup h3 {
+  color: var(--bs-primary);                 /* Titre bleu */
+  font-size: 1rem;                          /* Taille de titre */
+  font-weight: 600;                         /* Semi-gras */
+  margin-bottom: 0.35rem;                   /* Espace sous le titre */
+}
+
+.kv {
+  display: flex;                            /* Clé et valeur en ligne */
+  justify-content: space-between;           /* Espace entre clé et valeur */
+  align-items: center;                      /* Centrage vertical */
+  padding: 0.22rem 0;                       /* Espacement vertical entre lignes */
+  border-bottom: 1px solid #f0f0f0;         /* Lignes séparatrices */
+  white-space: nowrap;                      /* Empêche le retour à la ligne */
+  gap: 0.75rem;
+}
+
+.kv:last-child {
+  border-bottom: none;                      /* Supprime la ligne sur la dernière entrée */
+}
+
+.kv:nth-child(odd)  { background: rgba(59,130,246,0.05); border-radius: 5px; }
+.kv:nth-child(even) { background: rgba(59,130,246,0.11); border-radius: 5px; }
+
+body.dark-mode .kv:nth-child(odd)  { background: rgba(96,165,250,0.06); }
+body.dark-mode .kv:nth-child(even) { background: rgba(96,165,250,0.13); }
+
+.kv span:first-child {
+  font-weight: 500;                         /* Clé légèrement en valeur */
+  color: var(--bs-dark);                    /* Couleur sombre pour la clé */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kv span:last-child {
+  color: var(--bs-secondary);               /* Valeur grisée */
+  font-weight: 400;                         /* Poids normal pour la valeur */
+  flex-shrink: 0;                           /* La valeur ne se compresse pas */
+}
+
+.popup-actions {
+  margin-top: 0.4rem;                       /* Espace au-dessus du bloc d'actions */
+  padding-top: 0.4rem;                      /* Espace intérieur haut */
+  border-top: 1px solid #f0f0f0;            /* Séparateur avec les kv */
+}
+
+.popup-actions a {
+  color: var(--bs-primary);                 /* Lien bleu */
+  text-decoration: none;                    /* Pas de soulignement par défaut */
+  font-size: 0.875rem;                      /* Taille compacte */
+  display: inline-flex;                     /* Icône + texte alignés */
+  align-items: center;                      /* Centrage vertical */
+  gap: 0.5rem;                              /* Espace entre icône et texte */
+}
+
+.popup-actions a:hover {
+  text-decoration: underline;               /* Souligné au survol */
+}
+
+/* ============================
+   Contrôles OpenLayers
+   Zoom  → gauche (défaut OL)
+   Géolocalisation + Recentrer → droite
+   ============================ */
+
+/* Zoom natif OL — position gauche par défaut OL, on corrige juste le gap interne */
+.ol-zoom {
+  top:  15px !important;
+  left: 15px !important;
+  transform-origin: top left;
+  transition: transform 0.25s ease;
+}
+.ol-zoom-in  { margin-bottom: 4px !important; }
+
+/* Recentrer — droite */
+.ol-control.recenter {
+  top:   15px;
+  right: 15px;
+  transform-origin: top right;
+  transition: transform 0.25s ease;
+}
+
+/* Ma position — droite, juste sous Recentrer (44px + 4px gap) */
+.ol-control.locate {
+  top:   63px;
+  right: 15px;
+  transform-origin: top right;
+  transition: transform 0.25s ease;
+}
+
+.ol-control button {
+  background: rgba(15,23,42,0.82) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 10px !important;
+  width: 44px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-size: 1.15rem !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.35) !important;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+.ol-control button:hover {
+  background: rgba(30,41,59,0.95) !important;
+  border-color: rgba(255,255,255,0.22) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.45) !important;
+}
+
+.ol-control img {
+  max-width: 20px;
+  max-height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+/* =========================================
+   Animations KPI - pour feedback de mise à jour
+   ========================================= */
+.kpi-value-updating {
+  animation: kpi-flash 0.55s ease-out;
+}
+
+@keyframes kpi-flash {
+  0%   { opacity: 0.4; transform: translateY(4px) scale(0.97); }
+  60%  { opacity: 1;   transform: translateY(-1px) scale(1.02); }
+  100% { opacity: 1;   transform: translateY(0) scale(1); }
+}
+
+/* Valeur numérique : tabular nums pour éviter les sauts de largeur */
+.kpi-card .fs-4,
+.kpi-card .fs-5 {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* =========================================
+   Style du placeholder compact (classe utilitaire)
+   ========================================= */
+.placeholder-small::placeholder {
+  font-size: clamp(0.7rem, 0.9vw, 0.8rem); /* Placeholder adaptatif */
+  line-height: 1.2rem;                      /* Interligne réduit pour 2 lignes serrées */
+  white-space: pre-line;                    /* Respecte les sauts de ligne (&#10;) */
+}
+
+/* ============================
+   Utilitaires pour debug (optionnel)
+   ============================ */
+.debug-screen-size {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  z-index: 9999;
+  display: none; /* Activer pour debug */
+}
+
+.debug-screen-size:after {
+  content: "Unknown";
+}
+
+@media (min-width: 1400px) {
+  .debug-screen-size:after { content: "XL Desktop (>1400px)"; }
+}
+
+@media (max-width: 1400px) {
+  .debug-screen-size:after { content: "Large Desktop (1200-1400px)"; }
+}
+
+@media (max-width: 1200px) {
+  .debug-screen-size:after { content: "Desktop (992-1200px)"; }
+}
+
+@media (max-width: 992px) {
+  .debug-screen-size:after { content: "Tablet (768-992px)"; }
+}
+
+@media (max-width: 768px) {
+  .debug-screen-size:after { content: "Mobile Large (576-768px)"; }
+}
+
+@media (max-width: 576px) {
+  .debug-screen-size:after { content: "Mobile Small (<576px)"; }
+}
+
+/* Pour activer le debug, décommentez : */
+/*
+.debug-screen-size {
+  display: block;
+}
+*/
+
+/* ============================
+   STYLES SIMULATEUR PANNEAU DROIT
+   Version finale épurée
+   ============================ */
+/* ============================
+   STYLES SIMULATEUR PANNEAU DROIT
+   Version finale avec fonction d'agrandissement
+   ============================ */
+
+/* === Header du simulateur === */
+.simulator-header {
+  background: rgba(248, 249, 250, 0.8);
+  border: 1px solid #e9ecef;
+  border-radius: var(--border-radius);
+  padding: clamp(0.6rem, 1vw, 0.8rem);
+  margin-bottom: 0.75rem;
+}
+
+.simulator-header h6 {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  margin: 0;
+}
+
+/* === Bouton d'agrandissement === */
+#expandSimulator {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.2rem;
+  transition: all 0.2s ease;
+  border: 1px solid var(--bs-primary);
+  background: white;
+  color: var(--bs-primary);
+}
+
+#expandSimulator:hover {
+  transform: scale(1.05);
+  background: var(--bs-primary);
+  color: white;
+}
+
+#expandSimulator:focus {
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* === Mode agrandi du panneau === */
+.simulator-expanded {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  background: white !important;
+  padding: 2rem !important;
+  overflow-y: auto !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  grid-area: unset !important;
+}
+
+/* === Ajustements pour le contenu en mode agrandi === */
+.simulator-expanded .d-flex.justify-content-between {
+  max-width: 1200px;
+  margin: 0 auto 2rem auto;
+}
+
+.simulator-expanded .simulator-controls {
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  padding: 1.5rem;
+  background: rgba(248, 249, 250, 0.8);
+  border-radius: 0.5rem;
+}
+
+.simulator-expanded .simulator-chart {
+  max-width: 1200px;
+  margin: 1.5rem auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.simulator-expanded .chart-panel {
+  height: clamp(350px, 40vh, 500px) !important;
+}
+
+.simulator-expanded .simulator-controls .dropdown-content {
+  z-index: 10000;
+}
+
+/* === Overlay pour mode agrandi === */
+.simulator-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  display: none;
+  backdrop-filter: blur(3px);
+}
+
+.simulator-overlay.show {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* === Animation d'entrée/sortie du mode agrandi === */
+.right-rail {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.simulator-expanded {
+  animation: expandIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes expandIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* === Contrôles de filtrage compacts === */
+.simulator-controls {
+  background: rgba(248, 249, 250, 0.6);
+  border: 1px solid #e9ecef;
+  border-radius: var(--border-radius);
+  padding: clamp(0.75rem, 1.5vw, 1rem);
+}
+
+.simulator-controls .form-label {
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: var(--bs-dark);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+/* === Dropdowns adaptés au panneau === */
+.simulator-controls .dropdown-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.simulator-controls .dropdown-button {
+  width: 100%;
+  padding: clamp(0.38rem, 0.75vw, 0.55rem) clamp(0.6rem, 1vw, 0.75rem);
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+  font-family: 'Inter', sans-serif;
+  min-height: 32px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.simulator-controls .dropdown-button:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.simulator-controls .dropdown-button.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  border-radius: 8px 8px 0 0;
+}
+
+.simulator-controls .selected-text {
+  font-weight: 500;
+  color: #1e293b;
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.simulator-controls .dropdown-arrow {
+  color: #9ca3af;
+  transition: transform 0.2s ease;
+  font-size: 0.65rem;
+  margin-left: 0.5rem;
+}
+
+.simulator-controls .dropdown-button.active .dropdown-arrow {
+  transform: rotate(180deg);
+  color: #3b82f6;
+}
+
+/* === Contenu des dropdowns === */
+.simulator-controls .dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid #3b82f6;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1020;
+  display: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.simulator-controls .dropdown-content.show {
+  display: block;
+  animation: slideDown 0.18s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* === Options des dropdowns === */
+.simulator-controls .dropdown-options {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.simulator-controls .option-item {
+  padding: 0.45rem 0.65rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+  font-size: clamp(0.7rem, 0.8vw, 0.75rem);
+  font-family: 'Inter', sans-serif;
+}
+
+.simulator-controls .option-item:hover {
+  background: #eff6ff;
+}
+
+.simulator-controls .option-item input[type="checkbox"] {
+  margin-right: 0.5rem;
+  transform: scale(1.1);
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.simulator-controls .option-item label {
+  cursor: pointer;
+  flex: 1;
+  margin: 0;
+  font-weight: 400;
+  color: #374151;
+  line-height: 1.2;
+}
+
+.simulator-controls .option-item input[type="checkbox"]:checked + label {
+  color: var(--bs-primary);
+  font-weight: 500;
+}
+
+/* === Bouton d'action === */
+.simulator-controls .btn-sm {
+  font-size: clamp(0.7rem, 0.8vw, 0.75rem);
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.2rem;
+}
+
+/* === Graphiques === */
+.simulator-chart {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.simulator-chart h6 {
+  padding: clamp(0.6rem, 1vw, 0.8rem) clamp(0.75rem, 1.2vw, 1rem);
+  margin: 0;
+  font-size: clamp(0.8rem, 0.95vw, 0.9rem);
+  border-bottom: 1px solid #f0f0f0;
+  background: rgba(248, 249, 250, 0.7);
+}
+
+.chart-panel {
+  height: clamp(220px, 25vh, 280px);
+  width: 100%;
+  position: relative;
+}
+
+.chart-panel .loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6c757d;
+  font-size: clamp(0.75rem, 0.85vw, 0.8rem);
+}
+
+/* Canvas ECharts dans le panneau */
+.chart-panel canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* === Scrollbar personnalisée pour dropdowns === */
+.simulator-controls .dropdown-options::-webkit-scrollbar {
+  width: 4px;
+}
+
+.simulator-controls .dropdown-options::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.simulator-controls .dropdown-options::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.simulator-controls .dropdown-options::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* === Responsive pour le panneau === */
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+  .chart-panel {
+    height: clamp(240px, 28vh, 300px);
+  }
+  
+  .simulator-controls .dropdown-content {
+    max-height: 220px;
+  }
+  
+  .simulator-expanded .chart-panel {
+    height: clamp(400px, 45vh, 550px) !important;
+  }
+}
+
+/* Desktop */
+@media (max-width: 1400px) and (min-width: 1200px) {
+  .chart-panel {
+    height: clamp(220px, 26vh, 280px);
+  }
+}
+
+/* Laptop */
+@media (max-width: 1200px) and (min-width: 992px) {
+  .chart-panel {
+    height: clamp(200px, 24vh, 260px);
+  }
+  
+  .simulator-controls .dropdown-content {
+    max-height: 180px;
+  }
+  
+  .simulator-controls .dropdown-options {
+    max-height: 130px;
+  }
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .chart-panel {
+    height: clamp(180px, 22vh, 240px);
+  }
+  
+  .simulator-controls {
+    padding: 0.6rem;
+  }
+  
+  .simulator-controls .dropdown-content {
+    max-height: 160px;
+  }
+  
+  .simulator-controls .dropdown-options {
+    max-height: 110px;
+  }
+  
+  .simulator-controls .form-label {
+    font-size: 0.75rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .simulator-expanded {
+    padding: 1rem !important;
+  }
+  
+  .simulator-expanded .chart-panel {
+    height: clamp(300px, 35vh, 400px) !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .chart-panel {
+    height: clamp(160px, 20vh, 220px);
+  }
+  
+  .simulator-controls {
+    padding: 0.5rem;
+  }
+  
+  .simulator-controls .dropdown-button {
+    padding: 0.4rem 0.6rem;
+    min-height: 30px;
+  }
+  
+  .simulator-controls .form-label {
+    font-size: 0.7rem;
+  }
+  
+  .simulator-chart h6 {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  
+  .simulator-expanded {
+    padding: 0.5rem !important;
+  }
+  
+  .simulator-expanded .chart-panel {
+    height: clamp(250px, 30vh, 350px) !important;
+  }
+}
+
+/* Très petit mobile */
+@media (max-width: 576px) {
+  .chart-panel {
+    height: clamp(140px, 18vh, 200px);
+  }
+  
+  .simulator-controls .dropdown-content {
+    max-height: 140px;
+  }
+  
+  .simulator-controls .dropdown-options {
+    max-height: 90px;
+  }
+}
+
+/* === Animation de chargement === */
+.simulator-chart.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.simulator-chart.loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(13, 110, 253, 0.1),
+    transparent
+  );
+  animation: loading-sweep 2s infinite;
+}
+
+@keyframes loading-sweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* === États d'erreur === */
+.chart-panel .error {
+  text-align: center;
+  padding: 1rem;
+  color: #dc3545;
+  background: #fdf2f2;
+  border: 1px solid #fadbd8;
+  border-radius: 0.25rem;
+  margin: 0.5rem;
+  font-size: clamp(0.7rem, 0.8vw, 0.75rem);
+}
+
+/* === Optimisation pour panneau collapsé === */
+.dashboard.panel-collapsed .simulator-controls .dropdown-content {
+  display: none !important;
+}
+
+/* === Z-index pour les dropdowns dans le panneau === */
+.right-rail .simulator-controls .dropdown-content {
+  z-index: 1030;
+}
+
+/* === Ajustements pour cohérence Bootstrap === */
+.simulator-controls .btn-primary {
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.simulator-controls .btn-primary:hover {
+  background: var(--bs-dark);
+  border-color: var(--bs-dark);
+}
+
+.simulator-controls .btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.simulator-controls .btn-outline-secondary:hover {
+  background: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+/* === Corrections spécifiques pour le mode agrandi === */
+body.simulator-fullscreen {
+  overflow: hidden !important;
+}
+
+/* Force le z-index pour être au-dessus de tout */
+.simulator-expanded {
+  z-index: 2147483647 !important;
+}
+
+.simulator-overlay {
+  z-index: 2147483646 !important;
+}
+
+/* ============================
+   SCROLLBAR PERSONNALISÉE POUR PANNEAU DROIT
+   Cohérente avec le panneau gauche
+   ============================ */
+
+/* === Scrollbar pour le panneau droit === */
+.right-rail {
+  overflow-y: auto !important;
+  max-height: calc(100vh - var(--header-height) - var(--kpi-bar-height) - 2vw);
+}
+
+.right-rail::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+
+.right-rail::-webkit-scrollbar-track {
+  background: rgba(248, 249, 250, 0.5);
+  border-radius: 4px;
+  margin: 4px 0;
+}
+
+.right-rail::-webkit-scrollbar-thumb {
+  background: rgba(108, 117, 125, 0.4);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.right-rail::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 117, 125, 0.6);
+}
+
+.right-rail::-webkit-scrollbar-thumb:active {
+  background: rgba(108, 117, 125, 0.8);
+}
+
+/* === Scrollbar pour mode agrandi === */
+.simulator-expanded::-webkit-scrollbar {
+  width: 12px;
+}
+
+.simulator-expanded::-webkit-scrollbar-track {
+  background: rgba(248, 249, 250, 0.3);
+  border-radius: 6px;
+}
+
+.simulator-expanded::-webkit-scrollbar-thumb {
+  background: rgba(108, 117, 125, 0.5);
+  border-radius: 6px;
+}
+
+.simulator-expanded::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 117, 125, 0.7);
+}
+
+/* === Styles pour Firefox === */
+.right-rail {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(108, 117, 125, 0.4) rgba(248, 249, 250, 0.5);
+}
+
+.simulator-expanded {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(108, 117, 125, 0.5) rgba(248, 249, 250, 0.3);
+}
+
+/* === Ajustements pour cohérence avec le panneau gauche === */
+.right-rail-inner {
+  padding-right: 0.75rem; /* Espace pour la scrollbar */
+}
+
+/* === Responsive pour la scrollbar === */
+@media (max-width: 992px) {
+  .right-rail::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .right-rail::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+  }
+  
+  .right-rail::-webkit-scrollbar-track {
+    border-radius: 3px;
+  }
+}
+
+@media (max-width: 768px) {
+  .right-rail::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .right-rail-inner {
+    padding-right: 0.5rem;
+  }
+}
+
+/* === Animation d'apparition de la scrollbar === */
+.right-rail::-webkit-scrollbar-thumb {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.right-rail:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+/* === Scrollbar toujours visible si contenu déborde === */
+.right-rail.always-scroll::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+/* === Indicateur de scroll en bas === */
+.right-rail::after {
+  content: "";
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to top, rgba(248, 249, 250, 0.9), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================
+   MODE SOMBRE
+   ============================ */
+/* Transition douce lors du basculement mode sombre */
+body {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.kpi-card, .indicator-rail, .right-rail,
+.indicator-slot.tall, .residential-section,
+.map-legend, .simulator-chart, .modern-input,
+.modern-display, .simulator-controls,
+.simulator-controls .dropdown-button,
+.simulator-controls .dropdown-content {
+  transition:
+    background 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    color 0.3s ease;
+}
+
+body.dark-mode {
+  /* Fond avec légère profondeur radiale */
+  background-color: #0a0f1e;
+  background-image: radial-gradient(ellipse at 20% 10%, rgba(30,58,138,0.18) 0%, transparent 55%),
+                    radial-gradient(ellipse at 80% 90%, rgba(20,83,45,0.10) 0%, transparent 50%);
+  color: #e2e8f0;
+}
+
+body.dark-mode .main-header {
+  background: #020617;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* KPI cards : elevation claire + glow coloré sur hover */
+body.dark-mode .kpi-card {
+  /* pas de background ici — les teintes spécifiques .kpi-lico/degree/renter/alone s'appliquent */
+  border-color: #2d3f55;               /* border-color seul — préserve la largeur border-top: 3px */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .kpi-lico:hover   { box-shadow: 0 0 0 1px #3b82f6, 0 8px 20px rgba(59,130,246,0.2); }
+body.dark-mode .kpi-degree:hover { box-shadow: 0 0 0 1px #f59e0b, 0 8px 20px rgba(245,158,11,0.2); }
+body.dark-mode .kpi-renter:hover { box-shadow: 0 0 0 1px #06b6d4, 0 8px 20px rgba(6,182,212,0.2);  }
+body.dark-mode .kpi-alone:hover  { box-shadow: 0 0 0 1px #f43f5e, 0 8px 20px rgba(244,63,94,0.2);  }
+
+body.dark-mode .kpi-card .text-muted { color: #ffffff !important; }
+body.dark-mode .kpi-card .text-dark  { color: #e2e8f0 !important; }
+
+/* Panneaux : hiérarchie de profondeur à 3 niveaux */
+/* ============================
+   PANNEAUX — coins arrondis et ombres modernisés
+   ============================ */
+.indicator-rail,
+.right-rail {
+  border-radius: 12px;
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.indicator-slot.tall {
+  border-radius: 10px;
+}
+
+.map-area {
+  border-radius: 12px;
+  border-color: #e5e7eb;
+}
+
+.residential-section {
+  border-radius: 10px;
+  border-color: #e5e7eb;
+}
+
+/* ============================
+   SCROLLBAR GLOBALE (mode clair)
+   ============================ */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  {
+  background: #d1d5db;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover  { background: #9ca3af; }
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* Firefox */
+* { scrollbar-width: thin; scrollbar-color: #d1d5db transparent; }
+
+/* ============================
+   BOUTONS GLOBAUX — style unifié
+   ============================ */
+
+/* Bouton toggle panneau */
+.panel-toggle {
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: #3b82f6;
+  border: none;
+  transition: right 0.3s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.panel-toggle:hover {
+  background: #2563eb;
+  box-shadow: 0 6px 16px rgba(59,130,246,0.35);
+  transform: translateY(-50%) translateX(2px);
+}
+
+/* Bouton réinitialiser */
+#resetFilters {
+  border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+/* Bouton agrandir simulateur */
+#expandSimulator {
+  border-radius: 8px;
+}
+
+/* ============================
+   STATISTIQUES DE POPULATION — section en haut du rail
+   ============================ */
+.pop-stats-section {
+  background: #f8faff;
+  border: 1px solid #e9ecef;
+  border-top: 3px solid #3b82f6;
+  border-radius: var(--border-radius, 12px);
+  padding: clamp(0.6rem, 1.2vw, 0.9rem);
+  margin-bottom: 0;
+}
+
+.pop-stats-section h6 {
+  color: var(--bs-primary);
+  font-weight: 600;
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(59,130,246,0.15);
+}
+
+.pop-stat-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.35rem 0.25rem;
+  text-align: center;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.pop-stat-card:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.pop-stat-card .fw-bold {
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.pop-stat-card small {
+  font-size: clamp(0.58rem, 0.72vw, 0.66rem);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  font-weight: 500;
+  color: #6b7280;
+  display: block;
+  line-height: 1.2;
+}
+
+/* ============================
+   Barres de charge — pleine hauteur, texte à l'intérieur
+   ============================ */
+
+/* La carte devient le conteneur de la barre */
+.pop-stat-card {
+  display: block !important;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Remplissage — pleine hauteur, largeur animée gauche → droite */
+.stat-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  z-index: 0;
+  border-radius: 9px;
+  transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.55;
+}
+
+/* Texte au-dessus de la barre */
+.stat-card-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* Couleurs spécifiques à chaque tranche d'âge */
+.stat-bar-65 { background: linear-gradient(90deg, #00c6ff, #0072ff); }
+.stat-bar-75 { background: linear-gradient(90deg, #a855f7, #ec4899); }
+.stat-bar-85 { background: linear-gradient(90deg, #ff9a00, #ff4e50); }
+
+/* Mode sombre */
+body.dark-mode .stat-bar-65 { background: linear-gradient(90deg, #00c6ff, #0072ff); }
+body.dark-mode .stat-bar-75 { background: linear-gradient(90deg, #a855f7, #ec4899); }
+body.dark-mode .stat-bar-85 { background: linear-gradient(90deg, #ff9a00, #ff4e50); }
+
+/* Cartes raffinées (legacy bg-light — conservé pour compatibilité) */
+.indicator-rail .bg-light {
+  background: #f8faff !important;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.indicator-rail .bg-light:hover {
+  background: #eff6ff !important;
+  border-color: #bfdbfe;
+}
+
+.indicator-rail .bg-light .fw-bold {
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.indicator-rail .bg-light small {
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #6b7280 !important;
+}
+
+/* ============================
+   FOCUS RING ACCESSIBLE — outline universel
+   ============================ */
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================
+   SPINNER DE CHARGEMENT — style cohérent
+   ============================ */
+.chart-panel .loading {
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  letter-spacing: 0.01em;
+}
+
+/* ============================
+   POPUP — coins et style modernisés
+   ============================ */
+.ol-popup {
+  border-radius: 14px;
+  padding: clamp(0.9rem, 1.8vw, 1.2rem);
+}
+
+.ol-popup h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+
+/* Barre de végétation dans le popup */
+.popup-veg-bar-track {
+  height: 6px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 3px;
+  margin: 0.25rem 0 0.35rem;
+  overflow: hidden;
+}
+.popup-veg-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #4ade80, #16a34a);
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+}
+body.dark-mode .popup-veg-bar-track { background: rgba(255,255,255,0.10); }
+body.dark-mode .popup-veg-bar-fill  { background: linear-gradient(90deg, #4ade80, #15803d); filter: brightness(1.1) saturate(1.15); }
+
+/* Bouton "Voir plus / Voir moins" */
+.popup-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.45rem 0.6rem;
+  background: none;
+  border: 1.5px dashed rgba(59,130,246,0.35);
+  border-radius: 10px;
+  color: #3b82f6;
+  font-size: 0.80rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.popup-more-btn:hover {
+  background: rgba(59,130,246,0.07);
+  border-color: rgba(59,130,246,0.65);
+}
+.popup-more-btn .popup-more-icon {
+  font-size: 0.95rem;
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+.popup-more-btn.open .popup-more-icon {
+  transform: rotate(180deg);
+}
+
+/* Section dépliable */
+.popup-extra {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.popup-extra.open {
+  max-height: 500px;
+}
+
+/* Dark mode */
+body.dark-mode .popup-more-btn {
+  color: #60a5fa;
+  border-color: rgba(96,165,250,0.30);
+}
+body.dark-mode .popup-more-btn:hover {
+  background: rgba(96,165,250,0.09);
+  border-color: rgba(96,165,250,0.60);
+}
+
+/* ============================
+   DARK MODE — panneaux raffinés
+   ============================ */
+body.dark-mode .indicator-rail {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+body.dark-mode .right-rail {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+}
+
+body.dark-mode .right-rail::after {
+  background: linear-gradient(to top, rgba(10, 15, 30, 0.95), transparent);
+}
+
+/* Niveau 2 : sections internes */
+body.dark-mode .indicator-slot.tall {
+  background: #131c2e;
+  border: 1px solid #1e2d42;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Niveau 3 : champs et formulaires */
+body.dark-mode .residential-section {
+  background: #131c2e;
+  border: 1px solid #1e2d42;
+}
+
+body.dark-mode .residential-section:hover {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+body.dark-mode .residential-section h6 {
+  color: #60a5fa;
+  border-bottom-color: rgba(96,165,250,0.25);
+}
+
+body.dark-mode .modern-input {
+  background: #0f172a;
+  border-color: #1e293b;
+  color: #e2e8f0;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .modern-input:hover  { border-color: #334155; }
+
+body.dark-mode .modern-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.2), inset 0 1px 3px rgba(0,0,0,0.3);
+  background: #131c2e;
+}
+
+body.dark-mode .modern-input::placeholder { color: #cbd5e1; }
+
+body.dark-mode .modern-display {
+  background: #0f172a;
+  border-color: #1e293b;
+  color: #475569;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+}
+
+body.dark-mode .modern-display.has-data {
+  background: #131c2e;
+  border-color: #059669;
+  color: #e2e8f0;
+  box-shadow: 0 0 0 3px rgba(5,150,105,0.15);
+}
+
+body.dark-mode .map-area {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .map-legend {
+  background: rgba(10, 15, 30, 0.97);
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  color: #e2e8f0;
+  box-shadow:
+    0 4px 8px rgba(0,0,0,0.5),
+    0 14px 30px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(59,130,246,0.06) inset;
+}
+
+body.dark-mode .map-legend:hover {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.55),
+    0 20px 40px rgba(0,0,0,0.55),
+    0 0 20px rgba(59,130,246,0.07);
+}
+
+body.dark-mode .legend-title  { color: #f1f5f9; }
+
+body.dark-mode .legend-subtitle {
+  color: #60a5fa;
+  border-bottom-color: rgba(59,130,246,0.2);
+  letter-spacing: 0.04em;
+}
+
+body.dark-mode .legend-item       { color: #94a3b8; }
+body.dark-mode .legend-item:hover { background-color: rgba(59,130,246,0.12); color: #e2e8f0; }
+
+body.dark-mode .bg-light {
+  background-color: #263244 !important;
+}
+
+body.dark-mode .text-muted  { color: #94a3b8 !important; }
+body.dark-mode .text-dark   { color: #e2e8f0 !important; }
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background: #263244;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-mode .simulator-controls {
+  background: rgba(19, 28, 46, 0.8);
+  border-color: #1e293b;
+}
+
+body.dark-mode .simulator-controls .dropdown-button {
+  background: #0f172a;
+  border-color: #1e293b;
+  color: #e2e8f0;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
+}
+
+body.dark-mode .simulator-controls .dropdown-button:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+body.dark-mode .simulator-controls .dropdown-button.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
+}
+
+body.dark-mode .simulator-controls .selected-text { color: #cbd5e1; }
+body.dark-mode .simulator-controls .dropdown-arrow { color: #475569; }
+
+body.dark-mode .simulator-controls .dropdown-content {
+  background: #131c2e;
+  border-color: #3b82f6;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .simulator-controls .option-item:hover {
+  background: rgba(59, 130, 246, 0.12);
+}
+
+body.dark-mode .simulator-controls .option-item label { color: #94a3b8; }
+
+body.dark-mode .simulator-controls .option-item input:checked + label {
+  color: #60a5fa;
+}
+
+body.dark-mode .simulator-controls .form-label { color: #94a3b8 !important; }
+
+/* Graphiques : fond sombre avec trait d'accentuation */
+body.dark-mode .simulator-chart {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+body.dark-mode .simulator-chart h6 {
+  background: linear-gradient(to right, rgba(59,130,246,0.12), transparent);
+  border-left-color: #3b82f6;
+  color: #93c5fd;
+}
+
+body.dark-mode .simulator-chart:last-child h6 {
+  background: linear-gradient(to right, rgba(239,68,68,0.12), transparent);
+  border-left-color: #f87171;
+  color: #fca5a5;
+}
+
+body.dark-mode .chart-panel { background: #0f172a; }
+
+body.dark-mode .bm-panel {
+  background: #1e293b;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5);
+}
+body.dark-mode .bm-header {
+  border-bottom-color: #334155;
+}
+body.dark-mode .bm-header-title { color: #94a3b8; }
+body.dark-mode .bm-close-btn    { color: #64748b; }
+body.dark-mode .bm-close-btn:hover { color: #e2e8f0; background: #334155; }
+body.dark-mode .bm-card:hover   { background: #263244; }
+body.dark-mode .bm-card span    { color: #94a3b8; }
+body.dark-mode .bm-card.selected span { color: #60a5fa; }
+body.dark-mode .bm-card.selected img  { border-color: #60a5fa; box-shadow: 0 0 0 1px #60a5fa, 0 2px 8px rgba(96,165,250,0.30); }
+
+body.dark-mode .ol-popup {
+  background: rgba(30, 41, 59, 0.98);
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-mode .ol-popup::after {
+  border-top-color: rgba(30, 41, 59, 0.98);
+}
+
+body.dark-mode .ol-popup h3  { color: #60a5fa; }
+body.dark-mode .kv            { border-bottom-color: #334155; }
+body.dark-mode .kv span:first-child { color: #e2e8f0; }
+body.dark-mode .kv span:last-child  { color: #94a3b8; }
+
+body.dark-mode .simulator-expanded {
+  background: #0f172a !important;
+  color: #e2e8f0;
+}
+
+body.dark-mode .simulator-expanded .simulator-controls {
+  background: rgba(38, 50, 68, 0.8);
+}
+
+/* Icônes mode sombre / clair */
+#dark-mode-toggle .fa-sun  { display: none; }
+#dark-mode-toggle .fa-moon { display: inline-block; }
+body.dark-mode #dark-mode-toggle .fa-sun  { display: inline-block; }
+body.dark-mode #dark-mode-toggle .fa-moon { display: none; }
+
+/* ============================
+   MODAL INFORMATION
+   ============================ */
+.info-modal-section {
+  border-left: 3px solid var(--bs-primary);
+  padding-left: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.info-modal-section h6 {
+  color: var(--bs-primary);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+body.dark-mode .modal-content {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+body.dark-mode .modal-header {
+  border-bottom-color: #334155;
+  background: #263244;
+}
+
+body.dark-mode .modal-footer {
+  border-top-color: #334155;
+  background: #263244;
+}
+
+body.dark-mode .info-modal-section h6 { color: #60a5fa; }
+
+/* Panneaux mode sombre */
+body.dark-mode .indicator-rail,
+body.dark-mode .right-rail {
+  border-color: #1e293b;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .map-area {
+  border-color: #1e293b;
+}
+
+/* Statistiques population mode sombre — nouvelle section */
+body.dark-mode .pop-stats-section {
+  background: linear-gradient(145deg, #1a2d45, #0f1e35);
+  border-color: rgba(59, 130, 246, 0.25);
+  border-top-color: #3b82f6;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+body.dark-mode .pop-stats-section h6 {
+  color: #60a5fa;
+  border-bottom-color: rgba(96,165,250,0.15);
+}
+
+body.dark-mode .pop-stat-card {
+  background: linear-gradient(135deg, rgba(97, 118, 145, 0.85), rgba(15,30,55,0.95));
+  border-color: rgba(96, 165, 250, 0.18);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+  backdrop-filter: blur(6px);
+}
+
+body.dark-mode .pop-stat-card:hover {
+  background: linear-gradient(135deg, rgba(40,70,110,0.9), rgba(20,40,70,0.95));
+  border-color: rgba(96, 165, 250, 0.45);
+  box-shadow: 0 4px 14px rgba(59,130,246,0.2), inset 0 1px 0 rgba(255,255,255,0.07);
+}
+
+body.dark-mode .pop-stat-card .fw-bold {
+  color: #f1f5f9;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .pop-stat-card small {
+  color: #94a3b8;
+}
+
+/* Barres plus vives en mode sombre */
+body.dark-mode .stat-bar-fill {
+  opacity: 0.75;
+  filter: brightness(1.15) saturate(1.2);
+}
+
+/* Statistiques population mode sombre (legacy) */
+body.dark-mode .indicator-rail .bg-light {
+  background: #0f172a !important;
+  border-color: #1e293b;
+}
+
+body.dark-mode .indicator-rail .bg-light:hover {
+  background: #131c2e !important;
+  border-color: #3b82f6;
+}
+
+body.dark-mode .indicator-rail .bg-light small {
+  color: #475569 !important;
+}
+
+/* Panel toggle mode sombre */
+body.dark-mode .panel-toggle {
+  background: #1e40af;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .panel-toggle:hover {
+  background: #2563eb;
+  box-shadow: 0 6px 16px rgba(59,130,246,0.25);
+}
+
+/* Icônes de titres : légère lueur bleue */
+body.dark-mode .indicator-rail h6 i,
+body.dark-mode .right-rail h6 i,
+body.dark-mode .residential-section h6 i {
+  color: #60a5fa;
+  filter: drop-shadow(0 0 4px rgba(96,165,250,0.4));
+}
+
+/* Scrollbar mode sombre */
+body.dark-mode ::-webkit-scrollbar-track  { background: #0f172a; }
+body.dark-mode ::-webkit-scrollbar-thumb  { background: rgba(100,116,139,0.4); }
+body.dark-mode ::-webkit-scrollbar-thumb:hover { background: rgba(100,116,139,0.65); }
+
+/* Bouton de réinitialisation */
+body.dark-mode #resetFilters {
+  border-color: #334155;
+  color: #94a3b8;
+}
+body.dark-mode #resetFilters:hover {
+  background: #1e293b;
+  border-color: #60a5fa;
+  color: #60a5fa;
+}
+
+/* Bouton agrandir simulateur */
+body.dark-mode #expandSimulator {
+  border-color: #334155;
+  color: #60a5fa;
+  background: transparent;
+}
+body.dark-mode #expandSimulator:hover {
+  background: rgba(59,130,246,0.15);
+  border-color: #60a5fa;
+}
