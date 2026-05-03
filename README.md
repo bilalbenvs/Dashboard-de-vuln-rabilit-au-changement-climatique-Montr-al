@@ -26,4 +26,5 @@ Le dashboard vise à représenter la vulnérabilité aux vagues de chaleur à Mo
 ## Auteur
 
 Bilal Benyahia  
+Département de Géomatique
 Université de Sherbrooke
