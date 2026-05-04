@@ -3050,7 +3050,35 @@ document.addEventListener('DOMContentLoaded', function() {
     loadData();
     setupEventListeners();
     initLegendScaler();
+    initScaleRatioLabel();
 });
+
+// === Indicateur de ratio d'échelle (ex. 1 / 200 000) ===
+function updateScaleRatio() {
+    const label = document.getElementById('map-scale-ratio');
+    if (!label) return;
+    const view = map.getView();
+    const resolution = view.getResolution();
+    const center     = view.getCenter();
+    if (!resolution || !center) return;
+    const latRad          = ol.proj.toLonLat(center)[1] * Math.PI / 180;
+    const groundRes       = resolution * Math.cos(latRad);   // m/px réel au sol
+    const scaleDenom      = Math.round(groundRes * 96 / 0.0254);
+    label.textContent     = '1 / ' + scaleDenom.toLocaleString('fr-CA');
+}
+
+function initScaleRatioLabel() {
+    setTimeout(() => {
+        const scaleLine = document.querySelector('.ol-scale-line');
+        if (!scaleLine) return;
+        const label = document.createElement('div');
+        label.id = 'map-scale-ratio';
+        scaleLine.insertBefore(label, scaleLine.firstChild);
+        updateScaleRatio();
+        map.getView().on('change:resolution', updateScaleRatio);
+        map.getView().on('change:center',     updateScaleRatio);
+    }, 300);
+}
 
 // === Scaler adaptatif — légende + contrôles de la carte ===
 function initLegendScaler() {

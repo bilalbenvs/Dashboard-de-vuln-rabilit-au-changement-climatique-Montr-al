@@ -1125,6 +1125,17 @@ body.dark-mode .legend-item:hover { background-color: rgba(96, 165, 250, 0.1); }
   margin-top: 4px !important;
 }
 
+#map-scale-ratio {
+  color: rgba(255, 255, 255, 0.80);
+  font-size: 0.60rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
 /* ── Attribution © — texte discret, fond transparent ── */
 .ol-attribution {
   bottom: 12px !important;
